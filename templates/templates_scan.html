@@ -1,0 +1,158 @@
+{% extends "base.html" %}
+
+{% block title %}Security Scan - RiskAuto{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row mb-4">
+        <div class="col">
+            <h1 class="h3 fw-bold">
+                <i class="fas fa-radar me-2"></i>Passive Security Scanning
+            </h1>
+            <p class="text-muted">Non-intrusive scanning to collect information about internet-facing assets</p>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="card card-shadow">
+                <div class="card-body">
+                    <h5 class="card-title"><i class="fas fa-play me-2"></i>Initiate Security Scan</h5>
+                    
+                    <form method="POST" novalidate>
+                        {{ form.hidden_tag() }}
+                        
+                        <div class="row">
+                            <div class="col-md-8">
+                                <div class="form-floating mb-3">
+                                    {{ form.target(class="form-control", placeholder="Target Domain/IP") }}
+                                    {{ form.target.label() }}
+                                    {% for error in form.target.errors %}
+                                        <div class="text-danger small">{{ error }}</div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-floating mb-3">
+                                    {{ form.scan_type(class="form-select", placeholder="Scan Type") }}
+                                    {{ form.scan_type.label() }}
+                                    {% for error in form.scan_type.errors %}
+                                        <div class="text-danger small">{{ error }}</div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="d-grid">
+                            {{ form.submit(class="btn btn-gradient btn-lg") }}
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Scan Information -->
+            <div class="card card-shadow mt-4">
+                <div class="card-body">
+                    <h6 class="card-title"><i class="fas fa-info-circle me-2"></i>Scan Types Information</h6>
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <div class="border rounded p-3 h-100">
+                                <h6 class="text-primary">Comprehensive Scan</h6>
+                                <small class="text-muted">
+                                    Full security assessment including port scanning, SSL/TLS analysis, DNS records, and security headers.
+                                </small>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="border rounded p-3 h-100">
+                                <h6 class="text-info">Port Scan Only</h6>
+                                <small class="text-muted">
+                                    Focuses on identifying open ports and services running on the target system.
+                                </small>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="border rounded p-3 h-100">
+                                <h6 class="text-success">SSL/TLS Only</h6>
+                                <small class="text-muted">
+                                    Analyzes SSL/TLS certificates, cipher suites, and cryptographic configurations.
+                                </small>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="border rounded p-3 h-100">
+                                <h6 class="text-warning">DNS Records Only</h6>
+                                <small class="text-muted">
+                                    Examines DNS configuration, records, and potential security misconfigurations.
+                                </small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recent Scans Sidebar -->
+        <div class="col-lg-4">
+            <div class="card card-shadow">
+                <div class="card-body">
+                    <h6 class="card-title"><i class="fas fa-history me-2"></i>Recent Scans</h6>
+                    
+                    {% if scans %}
+                        <div class="list-group list-group-flush">
+                            {% for scan in scans %}
+                                <div class="list-group-item px-0 py-2">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <div>
+                                            <h6 class="mb-1 small">{{ scan.target }}</h6>
+                                            <small class="text-muted">
+                                                {{ scan.scan_type.title() }} • 
+                                                {{ scan.scan_date.strftime('%m/%d %H:%M') }}
+                                            </small>
+                                        </div>
+                                        <div>
+                                            <a href="{{ url_for('view_scan', scan_id=scan.id) }}" class="btn btn-sm btn-outline-primary">
+                                                <i class="fas fa-eye"></i>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                        <div class="text-center mt-3">
+                            <a href="#" class="btn btn-sm btn-outline-primary">View All Scans</a>
+                        </div>
+                    {% else %}
+                        <p class="text-muted text-center py-3 small">No scans yet. Run your first scan to get started.</p>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Security Tips -->
+            <div class="card card-shadow mt-4">
+                <div class="card-body">
+                    <h6 class="card-title"><i class="fas fa-lightbulb me-2"></i>Security Tips</h6>
+                    <ul class="list-unstyled small">
+                        <li class="mb-2">
+                            <i class="fas fa-check text-success me-2"></i>
+                            Always scan with proper authorization
+                        </li>
+                        <li class="mb-2">
+                            <i class="fas fa-check text-success me-2"></i>
+                            Use comprehensive scans for initial assessments
+                        </li>
+                        <li class="mb-2">
+                            <i class="fas fa-check text-success me-2"></i>
+                            Schedule regular scans for monitoring
+                        </li>
+                        <li class="mb-2">
+                            <i class="fas fa-check text-success me-2"></i>
+                            Review findings and implement recommendations
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

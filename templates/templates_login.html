@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+
+{% block title %}Login - RiskAuto{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-6 col-lg-4">
+            <div class="card card-shadow mt-5">
+                <div class="card-body p-4">
+                    <div class="text-center mb-4">
+                        <i class="fas fa-shield-alt fa-3x text-primary mb-3"></i>
+                        <h2 class="fw-bold">Welcome Back</h2>
+                        <p class="text-muted">Sign in to your RiskAuto account</p>
+                    </div>
+
+                    <form method="POST" novalidate>
+                        {{ form.hidden_tag() }}
+                        
+                        <div class="form-floating mb-3">
+                            {{ form.email(class="form-control", placeholder="Email") }}
+                            {{ form.email.label() }}
+                            {% for error in form.email.errors %}
+                                <div class="text-danger small">{{ error }}</div>
+                            {% endfor %}
+                        </div>
+
+                        <div class="form-floating mb-3">
+                            {{ form.password(class="form-control", placeholder="Password") }}
+                            {{ form.password.label() }}
+                            {% for error in form.password.errors %}
+                                <div class="text-danger small">{{ error }}</div>
+                            {% endfor %}
+                        </div>
+
+                        <div class="form-check mb-3">
+                            {{ form.remember(class="form-check-input") }}
+                            {{ form.remember.label(class="form-check-label") }}
+                        </div>
+
+                        <div class="d-grid">
+                            {{ form.submit(class="btn btn-gradient btn-lg") }}
+                        </div>
+                    </form>
+
+                    <hr class="my-4">
+                    
+                    <div class="text-center">
+                        <p class="mb-0">Don't have an account? 
+                            <a href="{{ url_for('register') }}" class="text-decoration-none">Register here</a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Security Notice -->
+            <div class="card mt-3">
+                <div class="card-body p-3">
+                    <div class="d-flex align-items-center">
+                        <i class="fas fa-lock text-primary me-2"></i>
+                        <div>
+                            <small class="text-muted">
+                                <strong>Secure Login:</strong> Your account is protected with advanced security measures including account lockout protection.
+                            </small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
