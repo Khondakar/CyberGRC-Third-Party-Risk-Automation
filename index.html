@@ -1,0 +1,1153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RiskAuto - Third-Party Risk Assessment Platform</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .fade-in {
+            animation: fadeIn 0.5s ease-out;
+        }
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        .spinner {
+            animation: spin 1s linear infinite;
+        }
+        .gradient-bg {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        .card-shadow {
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+        .risk-low { background-color: #10b981; color: white; }
+        .risk-medium { background-color: #f59e0b; color: white; }
+        .risk-high { background-color: #ef4444; color: white; }
+        .risk-critical { background-color: #7f1d1d; color: white; }
+    </style>
+</head>
+<body class="bg-gray-50 min-h-screen">
+    <!-- Navigation Bar -->
+    <nav class="gradient-bg text-white shadow-lg">
+        <div class="container mx-auto px-4 py-4">
+            <div class="flex justify-between items-center">
+                <div class="flex items-center space-x-2">
+                    <i class="fas fa-shield-alt text-3xl"></i>
+                    <h1 class="text-2xl font-bold">RiskAuto</h1>
+                </div>
+                <div id="navButtons" class="space-x-4">
+                    <button onclick="showLogin()" class="px-4 py-2 bg-white text-purple-700 rounded-lg hover:bg-gray-100 transition">Login</button>
+                    <button onclick="showRegister()" class="px-4 py-2 border-2 border-white rounded-lg hover:bg-white hover:text-purple-700 transition">Register</button>
+                </div>
+                <div id="userNav" class="hidden space-x-4">
+                    <span id="welcomeUser" class="mr-4"></span>
+                    <button onclick="logout()" class="px-4 py-2 bg-red-500 rounded-lg hover:bg-red-600 transition">Logout</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content Container -->
+    <div class="container mx-auto px-4 py-8">
+        <!-- Landing Page -->
+        <div id="landingPage" class="fade-in">
+            <div class="text-center mb-12">
+                <h2 class="text-5xl font-bold text-gray-800 mb-4">Third-Party Risk Assessment Platform</h2>
+                <p class="text-xl text-gray-600 mb-8">Comprehensive cloud security and vendor risk management solution</p>
+                <div class="grid md:grid-cols-3 gap-8 mt-12">
+                    <div class="bg-white p-8 rounded-xl card-shadow">
+                        <i class="fas fa-radar text-5xl text-purple-600 mb-4"></i>
+                        <h3 class="text-2xl font-bold mb-3">Passive Scanning</h3>
+                        <p class="text-gray-600">Non-intrusive scanning of internet-facing assets, ports, SSL/TLS certificates, and DNS records</p>
+                    </div>
+                    <div class="bg-white p-8 rounded-xl card-shadow">
+                        <i class="fas fa-clipboard-check text-5xl text-purple-600 mb-4"></i>
+                        <h3 class="text-2xl font-bold mb-3">Security Questionnaires</h3>
+                        <p class="text-gray-600">Customizable questionnaires to assess third-party security posture and compliance</p>
+                    </div>
+                    <div class="bg-white p-8 rounded-xl card-shadow">
+                        <i class="fas fa-chart-line text-5xl text-purple-600 mb-4"></i>
+                        <h3 class="text-2xl font-bold mb-3">Automated Reports</h3>
+                        <p class="text-gray-600">Auto-generated risk assessment reports with actionable insights and risk ratings</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Login Page -->
+        <div id="loginPage" class="hidden fade-in max-w-md mx-auto">
+            <div class="bg-white p-8 rounded-xl card-shadow">
+                <h2 class="text-3xl font-bold mb-6 text-center">Login to RiskAuto</h2>
+                <form onsubmit="login(event)">
+                    <div class="mb-4">
+                        <label class="block text-gray-700 mb-2">Email</label>
+                        <input type="email" id="loginEmail" required class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600">
+                    </div>
+                    <div class="mb-6">
+                        <label class="block text-gray-700 mb-2">Password</label>
+                        <input type="password" id="loginPassword" required class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600">
+                    </div>
+                    <button type="submit" class="w-full bg-purple-600 text-white py-3 rounded-lg hover:bg-purple-700 transition">Login</button>
+                </form>
+                <p class="text-center mt-4 text-gray-600">Don't have an account? <a href="#" onclick="showRegister()" class="text-purple-600 hover:underline">Register here</a></p>
+            </div>
+        </div>
+
+        <!-- Registration Page -->
+        <div id="registerPage" class="hidden fade-in max-w-md mx-auto">
+            <div class="bg-white p-8 rounded-xl card-shadow">
+                <h2 class="text-3xl font-bold mb-6 text-center">Register for RiskAuto</h2>
+                <form onsubmit="register(event)">
+                    <div class="mb-4">
+                        <label class="block text-gray-700 mb-2">Company Name</label>
+                        <input type="text" id="regCompany" required class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600">
+                    </div>
+                    <div class="mb-4">
+                        <label class="block text-gray-700 mb-2">Full Name</label>
+                        <input type="text" id="regName" required class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600">
+                    </div>
+                    <div class="mb-4">
+                        <label class="block text-gray-700 mb-2">Email</label>
+                        <input type="email" id="regEmail" required class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600">
+                    </div>
+                    <div class="mb-6">
+                        <label class="block text-gray-700 mb-2">Password</label>
+                        <input type="password" id="regPassword" required class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600">
+                    </div>
+                    <button type="submit" class="w-full bg-purple-600 text-white py-3 rounded-lg hover:bg-purple-700 transition">Register</button>
+                </form>
+                <p class="text-center mt-4 text-gray-600">Already have an account? <a href="#" onclick="showLogin()" class="text-purple-600 hover:underline">Login here</a></p>
+            </div>
+        </div>
+
+        <!-- Dashboard -->
+        <div id="dashboard" class="hidden fade-in">
+            <div class="mb-8">
+                <h2 class="text-4xl font-bold text-gray-800 mb-2">Dashboard</h2>
+                <p class="text-gray-600">Manage your third-party risk assessments and security scans</p>
+            </div>
+
+            <!-- Dashboard Tabs -->
+            <div class="mb-6 border-b border-gray-200">
+                <div class="flex space-x-4">
+                    <button onclick="showTab('passive-scan')" class="tab-button px-6 py-3 font-semibold border-b-2 border-purple-600 text-purple-600">
+                        <i class="fas fa-radar mr-2"></i>Passive Scanning
+                    </button>
+                    <button onclick="showTab('questionnaires')" class="tab-button px-6 py-3 font-semibold text-gray-600 hover:text-purple-600">
+                        <i class="fas fa-clipboard-list mr-2"></i>Questionnaires
+                    </button>
+                    <button onclick="showTab('assessments')" class="tab-button px-6 py-3 font-semibold text-gray-600 hover:text-purple-600">
+                        <i class="fas fa-chart-bar mr-2"></i>Assessments
+                    </button>
+                    <button onclick="showTab('reports')" class="tab-button px-6 py-3 font-semibold text-gray-600 hover:text-purple-600">
+                        <i class="fas fa-file-alt mr-2"></i>Reports
+                    </button>
+                </div>
+            </div>
+
+            <!-- Passive Scanning Tab -->
+            <div id="passive-scan-tab" class="tab-content">
+                <div class="bg-white p-8 rounded-xl card-shadow mb-6">
+                    <h3 class="text-2xl font-bold mb-4">Passive Security Scanning</h3>
+                    <p class="text-gray-600 mb-6">Non-intrusive scanning to collect information about internet-facing assets including open ports, SSL/TLS certificates, and DNS records.</p>
+                    
+                    <form onsubmit="startPassiveScan(event)" class="mb-6">
+                        <div class="grid md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-gray-700 mb-2">Target Domain/IP</label>
+                                <input type="text" id="scanTarget" required placeholder="example.com or 192.168.1.1" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600">
+                            </div>
+                            <div>
+                                <label class="block text-gray-700 mb-2">Scan Type</label>
+                                <select id="scanType" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600">
+                                    <option value="comprehensive">Comprehensive Scan</option>
+                                    <option value="ports">Port Scan Only</option>
+                                    <option value="ssl">SSL/TLS Only</option>
+                                    <option value="dns">DNS Records Only</option>
+                                </select>
+                            </div>
+                        </div>
+                        <button type="submit" class="mt-4 px-6 py-3 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition">
+                            <i class="fas fa-play mr-2"></i>Start Scan
+                        </button>
+                    </form>
+
+                    <div id="scanProgress" class="hidden mb-6">
+                        <div class="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                            <div class="flex items-center">
+                                <i class="fas fa-spinner spinner text-2xl text-blue-600 mr-3"></i>
+                                <span class="text-blue-800 font-semibold">Scanning in progress...</span>
+                            </div>
+                            <div class="mt-3 bg-gray-200 rounded-full h-2">
+                                <div id="progressBar" class="bg-blue-600 h-2 rounded-full transition-all duration-500" style="width: 0%"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="scanResults" class="hidden">
+                        <h4 class="text-xl font-bold mb-4">Scan Results</h4>
+                        <div id="scanResultsContent" class="space-y-4"></div>
+                    </div>
+                </div>
+
+                <div id="scanHistory" class="bg-white p-8 rounded-xl card-shadow">
+                    <h3 class="text-2xl font-bold mb-4">Scan History</h3>
+                    <div id="scanHistoryList" class="space-y-3"></div>
+                </div>
+            </div>
+
+            <!-- Questionnaires Tab -->
+            <div id="questionnaires-tab" class="tab-content hidden">
+                <div class="bg-white p-8 rounded-xl card-shadow mb-6">
+                    <h3 class="text-2xl font-bold mb-4">Create Security Questionnaire</h3>
+                    <p class="text-gray-600 mb-6">Create customizable security questionnaires to share with third parties for risk assessment.</p>
+                    
+                    <form onsubmit="createQuestionnaire(event)">
+                        <div class="mb-4">
+                            <label class="block text-gray-700 mb-2">Questionnaire Name</label>
+                            <input type="text" id="questionnaireName" required class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600">
+                        </div>
+                        <div class="mb-4">
+                            <label class="block text-gray-700 mb-2">Third-Party Company Name</label>
+                            <input type="text" id="thirdPartyName" required class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600">
+                        </div>
+                        <div class="mb-4">
+                            <label class="block text-gray-700 mb-2">Third-Party Email</label>
+                            <input type="email" id="thirdPartyEmail" required class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600">
+                        </div>
+                        <div class="mb-4">
+                            <label class="block text-gray-700 mb-2">Questionnaire Template</label>
+                            <select id="questionnaireTemplate" onchange="loadTemplate()" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600">
+                                <option value="standard">Standard Security Assessment</option>
+                                <option value="cloud">Cloud Security Assessment</option>
+                                <option value="gdpr">GDPR Compliance</option>
+                                <option value="custom">Custom Questions</option>
+                            </select>
+                        </div>
+                        
+                        <div id="questionsList" class="mb-6 space-y-4"></div>
+                        
+                        <div class="flex space-x-4">
+                            <button type="button" onclick="addCustomQuestion()" class="px-6 py-3 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition">
+                                <i class="fas fa-plus mr-2"></i>Add Question
+                            </button>
+                            <button type="submit" class="px-6 py-3 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition">
+                                <i class="fas fa-paper-plane mr-2"></i>Create & Send Questionnaire
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="bg-white p-8 rounded-xl card-shadow">
+                    <h3 class="text-2xl font-bold mb-4">Sent Questionnaires</h3>
+                    <div id="questionnairesList" class="space-y-3"></div>
+                </div>
+            </div>
+
+            <!-- Assessments Tab -->
+            <div id="assessments-tab" class="tab-content hidden">
+                <div class="bg-white p-8 rounded-xl card-shadow">
+                    <h3 class="text-2xl font-bold mb-4">Risk Assessments</h3>
+                    <p class="text-gray-600 mb-6">View completed questionnaires and their risk ratings.</p>
+                    <div id="assessmentsList" class="space-y-4"></div>
+                </div>
+            </div>
+
+            <!-- Reports Tab -->
+            <div id="reports-tab" class="tab-content hidden">
+                <div class="bg-white p-8 rounded-xl card-shadow">
+                    <h3 class="text-2xl font-bold mb-4">Generated Reports</h3>
+                    <p class="text-gray-600 mb-6">Auto-generated risk assessment reports with detailed analysis.</p>
+                    <div id="reportsList" class="space-y-4"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Third-Party Questionnaire Page -->
+        <div id="thirdPartyPage" class="hidden fade-in">
+            <div class="max-w-4xl mx-auto bg-white p-8 rounded-xl card-shadow">
+                <div class="text-center mb-8">
+                    <i class="fas fa-shield-alt text-6xl text-purple-600 mb-4"></i>
+                    <h2 class="text-3xl font-bold mb-2">Security Assessment Questionnaire</h2>
+                    <p class="text-gray-600">Please complete the following security questions about your organization</p>
+                </div>
+
+                <form onsubmit="submitThirdPartyQuestionnaire(event)" id="thirdPartyForm">
+                    <div id="thirdPartyQuestions" class="space-y-6 mb-8"></div>
+                    <button type="submit" class="w-full px-6 py-4 bg-purple-600 text-white text-lg rounded-lg hover:bg-purple-700 transition">
+                        <i class="fas fa-check-circle mr-2"></i>Submit Questionnaire
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Success Modal -->
+    <div id="successModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <div class="bg-white p-8 rounded-xl max-w-md mx-4 card-shadow">
+            <div class="text-center">
+                <i class="fas fa-check-circle text-6xl text-green-500 mb-4"></i>
+                <h3 class="text-2xl font-bold mb-2">Success!</h3>
+                <p id="successMessage" class="text-gray-600 mb-6"></p>
+                <button onclick="closeModal()" class="px-6 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Application State
+        let currentUser = null;
+        let questionnaires = [];
+        let assessments = [];
+        let scanHistory = [];
+        let users = [];
+        let customQuestionCounter = 0;
+
+        // Security Question Templates
+        const questionTemplates = {
+            standard: [
+                { id: 1, question: "Do you have a documented information security policy?", category: "Governance", weight: "high" },
+                { id: 2, question: "Is multi-factor authentication (MFA) enforced for all users?", category: "Access Control", weight: "critical" },
+                { id: 3, question: "Do you perform regular security awareness training for employees?", category: "Training", weight: "medium" },
+                { id: 4, question: "Are security patches applied within 30 days of release?", category: "Patch Management", weight: "high" },
+                { id: 5, question: "Do you encrypt data at rest and in transit?", category: "Data Protection", weight: "critical" },
+                { id: 6, question: "Do you have an incident response plan?", category: "Incident Management", weight: "high" },
+                { id: 7, question: "Are regular security audits conducted?", category: "Compliance", weight: "medium" },
+                { id: 8, question: "Do you maintain data backups with tested recovery procedures?", category: "Business Continuity", weight: "high" }
+            ],
+            cloud: [
+                { id: 1, question: "Do you use a major cloud service provider (AWS, Azure, GCP)?", category: "Infrastructure", weight: "medium" },
+                { id: 2, question: "Is cloud data encrypted using strong encryption standards?", category: "Data Protection", weight: "critical" },
+                { id: 3, question: "Do you implement network segmentation in your cloud environment?", category: "Network Security", weight: "high" },
+                { id: 4, question: "Are cloud access logs monitored and reviewed regularly?", category: "Monitoring", weight: "high" },
+                { id: 5, question: "Do you have DDoS protection implemented?", category: "Availability", weight: "medium" },
+                { id: 6, question: "Is your cloud infrastructure compliant with industry standards (ISO 27001, SOC 2)?", category: "Compliance", weight: "high" },
+                { id: 7, question: "Do you use infrastructure as code with version control?", category: "DevSecOps", weight: "medium" }
+            ],
+            gdpr: [
+                { id: 1, question: "Do you have a Data Protection Officer (DPO) appointed?", category: "Governance", weight: "high" },
+                { id: 2, question: "Can data subjects request deletion of their personal data?", category: "Rights Management", weight: "critical" },
+                { id: 3, question: "Do you maintain a data processing inventory?", category: "Documentation", weight: "high" },
+                { id: 4, question: "Are data breach notification procedures in place?", category: "Incident Response", weight: "critical" },
+                { id: 5, question: "Do you conduct Data Protection Impact Assessments (DPIA)?", category: "Risk Assessment", weight: "high" },
+                { id: 6, question: "Is consent obtained for data processing activities?", category: "Consent Management", weight: "critical" }
+            ]
+        };
+
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            loadFromStorage();
+            checkQueryParams();
+            loadTemplate();
+        });
+
+        // Check URL parameters for third-party questionnaire links
+        function checkQueryParams() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const questionnaireId = urlParams.get('q');
+            if (questionnaireId) {
+                showThirdPartyQuestionnaire(questionnaireId);
+            }
+        }
+
+        // Local Storage Functions
+        function saveToStorage() {
+            localStorage.setItem('riskauto_users', JSON.stringify(users));
+            localStorage.setItem('riskauto_questionnaires', JSON.stringify(questionnaires));
+            localStorage.setItem('riskauto_assessments', JSON.stringify(assessments));
+            localStorage.setItem('riskauto_scans', JSON.stringify(scanHistory));
+        }
+
+        function loadFromStorage() {
+            users = JSON.parse(localStorage.getItem('riskauto_users') || '[]');
+            questionnaires = JSON.parse(localStorage.getItem('riskauto_questionnaires') || '[]');
+            assessments = JSON.parse(localStorage.getItem('riskauto_assessments') || '[]');
+            scanHistory = JSON.parse(localStorage.getItem('riskauto_scans') || '[]');
+        }
+
+        // Navigation Functions
+        function showLogin() {
+            hideAllPages();
+            document.getElementById('loginPage').classList.remove('hidden');
+        }
+
+        function showRegister() {
+            hideAllPages();
+            document.getElementById('registerPage').classList.remove('hidden');
+        }
+
+        function hideAllPages() {
+            document.getElementById('landingPage').classList.add('hidden');
+            document.getElementById('loginPage').classList.add('hidden');
+            document.getElementById('registerPage').classList.add('hidden');
+            document.getElementById('dashboard').classList.add('hidden');
+            document.getElementById('thirdPartyPage').classList.add('hidden');
+        }
+
+        // Authentication Functions
+        function register(event) {
+            event.preventDefault();
+            const company = document.getElementById('regCompany').value;
+            const name = document.getElementById('regName').value;
+            const email = document.getElementById('regEmail').value;
+            const password = document.getElementById('regPassword').value;
+
+            if (users.find(u => u.email === email)) {
+                alert('Email already registered!');
+                return;
+            }
+
+            const user = { id: Date.now(), company, name, email, password };
+            users.push(user);
+            saveToStorage();
+            
+            showSuccessModal('Registration successful! Please login to continue.');
+            setTimeout(() => {
+                closeModal();
+                showLogin();
+            }, 2000);
+        }
+
+        function login(event) {
+            event.preventDefault();
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+
+            const user = users.find(u => u.email === email && u.password === password);
+            if (user) {
+                currentUser = user;
+                document.getElementById('navButtons').classList.add('hidden');
+                document.getElementById('userNav').classList.remove('hidden');
+                document.getElementById('welcomeUser').textContent = `Welcome, ${user.name}`;
+                hideAllPages();
+                document.getElementById('dashboard').classList.remove('hidden');
+                loadDashboard();
+            } else {
+                alert('Invalid credentials!');
+            }
+        }
+
+        function logout() {
+            currentUser = null;
+            document.getElementById('navButtons').classList.remove('hidden');
+            document.getElementById('userNav').classList.add('hidden');
+            hideAllPages();
+            document.getElementById('landingPage').classList.remove('hidden');
+        }
+
+        // Dashboard Functions
+        function loadDashboard() {
+            loadScanHistory();
+            loadQuestionnairesList();
+            loadAssessmentsList();
+            loadReportsList();
+        }
+
+        function showTab(tabName) {
+            // Hide all tabs
+            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.add('hidden'));
+            document.querySelectorAll('.tab-button').forEach(btn => {
+                btn.classList.remove('border-purple-600', 'text-purple-600');
+                btn.classList.add('text-gray-600');
+            });
+
+            // Show selected tab
+            document.getElementById(tabName + '-tab').classList.remove('hidden');
+            event.target.closest('button').classList.add('border-purple-600', 'text-purple-600');
+            event.target.closest('button').classList.remove('text-gray-600');
+        }
+
+        // Passive Scanning Functions
+        function startPassiveScan(event) {
+            event.preventDefault();
+            const target = document.getElementById('scanTarget').value;
+            const scanType = document.getElementById('scanType').value;
+
+            document.getElementById('scanProgress').classList.remove('hidden');
+            document.getElementById('scanResults').classList.add('hidden');
+
+            // Simulate scan progress
+            let progress = 0;
+            const progressInterval = setInterval(() => {
+                progress += 10;
+                document.getElementById('progressBar').style.width = progress + '%';
+                
+                if (progress >= 100) {
+                    clearInterval(progressInterval);
+                    completeScan(target, scanType);
+                }
+            }, 300);
+        }
+
+        function completeScan(target, scanType) {
+            setTimeout(() => {
+                document.getElementById('scanProgress').classList.add('hidden');
+                document.getElementById('scanResults').classList.remove('hidden');
+
+                // Generate mock scan results
+                const results = generateScanResults(target, scanType);
+                const scan = {
+                    id: Date.now(),
+                    target,
+                    scanType,
+                    date: new Date().toLocaleString(),
+                    results,
+                    userId: currentUser.id
+                };
+
+                scanHistory.push(scan);
+                saveToStorage();
+
+                displayScanResults(results);
+                loadScanHistory();
+            }, 500);
+        }
+
+        function generateScanResults(target, scanType) {
+            const results = {
+                target,
+                scanType,
+                timestamp: new Date().toLocaleString(),
+                findings: []
+            };
+
+            if (scanType === 'comprehensive' || scanType === 'ports') {
+                results.findings.push({
+                    category: 'Open Ports',
+                    severity: 'Medium',
+                    details: 'Ports 80, 443, 22 are open',
+                    recommendation: 'Ensure only necessary ports are exposed. Consider closing port 22 or restricting access.'
+                });
+            }
+
+            if (scanType === 'comprehensive' || scanType === 'ssl') {
+                results.findings.push({
+                    category: 'SSL/TLS Certificate',
+                    severity: 'Low',
+                    details: 'Valid SSL certificate found. TLS 1.2 and 1.3 supported',
+                    recommendation: 'Certificate is valid. Ensure automatic renewal is configured.'
+                });
+            }
+
+            if (scanType === 'comprehensive' || scanType === 'dns') {
+                results.findings.push({
+                    category: 'DNS Records',
+                    severity: 'Low',
+                    details: 'DNSSEC not configured, SPF and DMARC records found',
+                    recommendation: 'Consider implementing DNSSEC for additional security.'
+                });
+            }
+
+            results.findings.push({
+                category: 'Security Headers',
+                severity: 'High',
+                details: 'Missing security headers: X-Frame-Options, Content-Security-Policy',
+                recommendation: 'Implement recommended security headers to prevent clickjacking and XSS attacks.'
+            });
+
+            return results;
+        }
+
+        function displayScanResults(results) {
+            const container = document.getElementById('scanResultsContent');
+            container.innerHTML = `
+                <div class="bg-gray-50 p-4 rounded-lg mb-4">
+                    <h5 class="font-bold mb-2">Scan Summary</h5>
+                    <p><strong>Target:</strong> ${results.target}</p>
+                    <p><strong>Scan Type:</strong> ${results.scanType}</p>
+                    <p><strong>Completed:</strong> ${results.timestamp}</p>
+                </div>
+                ${results.findings.map(finding => `
+                    <div class="border-l-4 ${finding.severity === 'High' ? 'border-red-500' : finding.severity === 'Medium' ? 'border-yellow-500' : 'border-green-500'} p-4 mb-4 bg-white rounded">
+                        <div class="flex justify-between items-start mb-2">
+                            <h5 class="font-bold text-lg">${finding.category}</h5>
+                            <span class="px-3 py-1 rounded text-sm ${finding.severity === 'High' ? 'bg-red-100 text-red-800' : finding.severity === 'Medium' ? 'bg-yellow-100 text-yellow-800' : 'bg-green-100 text-green-800'}">
+                                ${finding.severity}
+                            </span>
+                        </div>
+                        <p class="text-gray-700 mb-2"><strong>Details:</strong> ${finding.details}</p>
+                        <p class="text-gray-600"><strong>Recommendation:</strong> ${finding.recommendation}</p>
+                    </div>
+                `).join('')}
+            `;
+        }
+
+        function loadScanHistory() {
+            const container = document.getElementById('scanHistoryList');
+            const userScans = scanHistory.filter(s => s.userId === currentUser.id);
+            
+            if (userScans.length === 0) {
+                container.innerHTML = '<p class="text-gray-500">No scan history available</p>';
+                return;
+            }
+
+            container.innerHTML = userScans.map(scan => `
+                <div class="border rounded-lg p-4 hover:bg-gray-50 cursor-pointer" onclick="viewScanDetails(${scan.id})">
+                    <div class="flex justify-between items-center">
+                        <div>
+                            <h5 class="font-bold">${scan.target}</h5>
+                            <p class="text-sm text-gray-600">${scan.scanType} - ${scan.date}</p>
+                        </div>
+                        <button class="px-4 py-2 bg-purple-600 text-white rounded hover:bg-purple-700">
+                            View Report
+                        </button>
+                    </div>
+                </div>
+            `).reverse().join('');
+        }
+
+        function viewScanDetails(scanId) {
+            const scan = scanHistory.find(s => s.id === scanId);
+            if (scan) {
+                displayScanResults(scan.results);
+                document.getElementById('scanResults').classList.remove('hidden');
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        }
+
+        // Questionnaire Functions
+        function loadTemplate() {
+            const template = document.getElementById('questionnaireTemplate').value;
+            const questionsList = document.getElementById('questionsList');
+            
+            if (template === 'custom') {
+                questionsList.innerHTML = '<p class="text-gray-600">Click "Add Question" to create custom questions</p>';
+                return;
+            }
+
+            const questions = questionTemplates[template] || questionTemplates.standard;
+            questionsList.innerHTML = questions.map((q, index) => `
+                <div class="border rounded-lg p-4 bg-gray-50">
+                    <div class="flex justify-between items-start">
+                        <div class="flex-1">
+                            <p class="font-semibold mb-1">${q.question}</p>
+                            <div class="flex space-x-2">
+                                <span class="text-xs px-2 py-1 bg-blue-100 text-blue-800 rounded">${q.category}</span>
+                                <span class="text-xs px-2 py-1 ${q.weight === 'critical' ? 'bg-red-100 text-red-800' : q.weight === 'high' ? 'bg-orange-100 text-orange-800' : 'bg-yellow-100 text-yellow-800'} rounded">
+                                    ${q.weight.toUpperCase()}
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function addCustomQuestion() {
+            const questionsList = document.getElementById('questionsList');
+            customQuestionCounter++;
+            
+            const questionDiv = document.createElement('div');
+            questionDiv.className = 'border rounded-lg p-4 bg-gray-50';
+            questionDiv.innerHTML = `
+                <div class="mb-2">
+                    <input type="text" placeholder="Enter your question" class="w-full px-3 py-2 border rounded" id="customQ${customQuestionCounter}">
+                </div>
+                <div class="flex space-x-2">
+                    <select class="px-3 py-2 border rounded" id="customCat${customQuestionCounter}">
+                        <option value="Governance">Governance</option>
+                        <option value="Access Control">Access Control</option>
+                        <option value="Data Protection">Data Protection</option>
+                        <option value="Network Security">Network Security</option>
+                        <option value="Compliance">Compliance</option>
+                    </select>
+                    <select class="px-3 py-2 border rounded" id="customWeight${customQuestionCounter}">
+                        <option value="critical">Critical</option>
+                        <option value="high">High</option>
+                        <option value="medium">Medium</option>
+                        <option value="low">Low</option>
+                    </select>
+                    <button type="button" onclick="this.parentElement.parentElement.remove()" class="px-3 py-2 bg-red-500 text-white rounded hover:bg-red-600">
+                        Remove
+                    </button>
+                </div>
+            `;
+            questionsList.appendChild(questionDiv);
+        }
+
+        function createQuestionnaire(event) {
+            event.preventDefault();
+            
+            const name = document.getElementById('questionnaireName').value;
+            const thirdPartyName = document.getElementById('thirdPartyName').value;
+            const thirdPartyEmail = document.getElementById('thirdPartyEmail').value;
+            const template = document.getElementById('questionnaireTemplate').value;
+
+            let questions = [];
+            if (template !== 'custom') {
+                questions = questionTemplates[template] || questionTemplates.standard;
+            } else {
+                // Collect custom questions
+                for (let i = 1; i <= customQuestionCounter; i++) {
+                    const qInput = document.getElementById(`customQ${i}`);
+                    if (qInput && qInput.value) {
+                        questions.push({
+                            id: i,
+                            question: qInput.value,
+                            category: document.getElementById(`customCat${i}`).value,
+                            weight: document.getElementById(`customWeight${i}`).value
+                        });
+                    }
+                }
+            }
+
+            const questionnaire = {
+                id: Date.now(),
+                name,
+                thirdPartyName,
+                thirdPartyEmail,
+                questions,
+                status: 'Sent',
+                sentDate: new Date().toLocaleString(),
+                userId: currentUser.id
+            };
+
+            questionnaires.push(questionnaire);
+            saveToStorage();
+
+            // Generate shareable link
+            const link = `${window.location.origin}${window.location.pathname}?q=${questionnaire.id}`;
+            
+            showSuccessModal(`Questionnaire created and sent to ${thirdPartyEmail}!<br><br>Shareable Link:<br><input type="text" value="${link}" class="w-full px-3 py-2 border rounded mt-2" readonly onclick="this.select()">`);
+            
+            event.target.reset();
+            loadQuestionnairesList();
+            customQuestionCounter = 0;
+        }
+
+        function loadQuestionnairesList() {
+            const container = document.getElementById('questionnairesList');
+            const userQuestionnaires = questionnaires.filter(q => q.userId === currentUser.id);
+            
+            if (userQuestionnaires.length === 0) {
+                container.innerHTML = '<p class="text-gray-500">No questionnaires sent yet</p>';
+                return;
+            }
+
+            container.innerHTML = userQuestionnaires.map(q => `
+                <div class="border rounded-lg p-4 hover:bg-gray-50">
+                    <div class="flex justify-between items-center">
+                        <div>
+                            <h5 class="font-bold">${q.name}</h5>
+                            <p class="text-sm text-gray-600">Sent to: ${q.thirdPartyName} (${q.thirdPartyEmail})</p>
+                            <p class="text-xs text-gray-500">${q.sentDate}</p>
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <span class="px-3 py-1 rounded text-sm ${q.status === 'Completed' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'}">
+                                ${q.status}
+                            </span>
+                            <button onclick="copyQuestionnaireLink(${q.id})" class="px-3 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">
+                                <i class="fas fa-link"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `).reverse().join('');
+        }
+
+        function copyQuestionnaireLink(questionnaireId) {
+            const link = `${window.location.origin}${window.location.pathname}?q=${questionnaireId}`;
+            navigator.clipboard.writeText(link).then(() => {
+                showSuccessModal('Questionnaire link copied to clipboard!');
+            });
+        }
+
+        // Third-Party Questionnaire Functions
+        function showThirdPartyQuestionnaire(questionnaireId) {
+            const questionnaire = questionnaires.find(q => q.id === parseInt(questionnaireId));
+            if (!questionnaire) {
+                alert('Questionnaire not found!');
+                return;
+            }
+
+            hideAllPages();
+            document.getElementById('thirdPartyPage').classList.remove('hidden');
+
+            const container = document.getElementById('thirdPartyQuestions');
+            container.innerHTML = `
+                <input type="hidden" id="questionnaireId" value="${questionnaire.id}">
+                <div class="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
+                    <h4 class="font-bold mb-2">${questionnaire.name}</h4>
+                    <p class="text-sm text-gray-700">From: ${questionnaire.thirdPartyName}</p>
+                </div>
+                ${questionnaire.questions.map((q, index) => `
+                    <div class="bg-white border rounded-lg p-6">
+                        <label class="block font-semibold mb-3">
+                            ${index + 1}. ${q.question}
+                            <span class="text-sm font-normal text-gray-500 ml-2">(${q.category})</span>
+                        </label>
+                        <div class="space-y-2">
+                            <label class="flex items-center space-x-2">
+                                <input type="radio" name="q${q.id}" value="yes" required class="form-radio text-purple-600">
+                                <span>Yes</span>
+                            </label>
+                            <label class="flex items-center space-x-2">
+                                <input type="radio" name="q${q.id}" value="partial" required class="form-radio text-purple-600">
+                                <span>Partially</span>
+                            </label>
+                            <label class="flex items-center space-x-2">
+                                <input type="radio" name="q${q.id}" value="no" required class="form-radio text-purple-600">
+                                <span>No</span>
+                            </label>
+                            <label class="flex items-center space-x-2">
+                                <input type="radio" name="q${q.id}" value="na" required class="form-radio text-purple-600">
+                                <span>Not Applicable</span>
+                            </label>
+                        </div>
+                        <div class="mt-3">
+                            <label class="block text-sm text-gray-600 mb-1">Additional Comments (Optional)</label>
+                            <textarea id="comment${q.id}" class="w-full px-3 py-2 border rounded-lg" rows="2"></textarea>
+                        </div>
+                    </div>
+                `).join('')}
+            `;
+        }
+
+        function submitThirdPartyQuestionnaire(event) {
+            event.preventDefault();
+            
+            const questionnaireId = parseInt(document.getElementById('questionnaireId').value);
+            const questionnaire = questionnaires.find(q => q.id === questionnaireId);
+            
+            const answers = questionnaire.questions.map(q => {
+                const answer = document.querySelector(`input[name="q${q.id}"]:checked`).value;
+                const comment = document.getElementById(`comment${q.id}`).value;
+                return { ...q, answer, comment };
+            });
+
+            // Calculate risk score
+            const riskScore = calculateRiskScore(answers);
+            const riskRating = getRiskRating(riskScore);
+
+            const assessment = {
+                id: Date.now(),
+                questionnaireId,
+                questionnaireName: questionnaire.name,
+                thirdPartyName: questionnaire.thirdPartyName,
+                thirdPartyEmail: questionnaire.thirdPartyEmail,
+                answers,
+                riskScore,
+                riskRating,
+                completedDate: new Date().toLocaleString(),
+                userId: questionnaire.userId
+            };
+
+            assessments.push(assessment);
+            
+            // Update questionnaire status
+            questionnaire.status = 'Completed';
+            saveToStorage();
+
+            // Generate report
+            generateReport(assessment);
+
+            showSuccessModal('Thank you! Your questionnaire has been submitted successfully. The requestor has been notified.');
+            
+            setTimeout(() => {
+                window.location.href = window.location.pathname;
+            }, 3000);
+        }
+
+        function calculateRiskScore(answers) {
+            let totalWeight = 0;
+            let riskPoints = 0;
+
+            answers.forEach(answer => {
+                const weight = answer.weight === 'critical' ? 4 : answer.weight === 'high' ? 3 : answer.weight === 'medium' ? 2 : 1;
+                totalWeight += weight;
+
+                if (answer.answer === 'no') {
+                    riskPoints += weight * 10;
+                } else if (answer.answer === 'partial') {
+                    riskPoints += weight * 5;
+                }
+            });
+
+            return Math.round((riskPoints / (totalWeight * 10)) * 100);
+        }
+
+        function getRiskRating(score) {
+            if (score >= 75) return 'Critical';
+            if (score >= 50) return 'High';
+            if (score >= 25) return 'Medium';
+            return 'Low';
+        }
+
+        function generateReport(assessment) {
+            const report = {
+                id: Date.now(),
+                assessmentId: assessment.id,
+                thirdPartyName: assessment.thirdPartyName,
+                questionnaireName: assessment.questionnaireName,
+                riskScore: assessment.riskScore,
+                riskRating: assessment.riskRating,
+                generatedDate: new Date().toLocaleString(),
+                userId: assessment.userId,
+                recommendations: generateRecommendations(assessment)
+            };
+
+            // Store in assessments with report
+            const assessmentIndex = assessments.findIndex(a => a.id === assessment.id);
+            if (assessmentIndex !== -1) {
+                assessments[assessmentIndex].report = report;
+                saveToStorage();
+            }
+        }
+
+        function generateRecommendations(assessment) {
+            const recommendations = [];
+            const failedQuestions = assessment.answers.filter(a => a.answer === 'no' || a.answer === 'partial');
+
+            failedQuestions.forEach(q => {
+                let recommendation = '';
+                
+                if (q.category === 'Access Control') {
+                    recommendation = 'Implement stronger access controls including MFA and role-based access control (RBAC).';
+                } else if (q.category === 'Data Protection') {
+                    recommendation = 'Enhance data protection measures with encryption at rest and in transit.';
+                } else if (q.category === 'Governance') {
+                    recommendation = 'Develop and document comprehensive security policies and procedures.';
+                } else if (q.category === 'Compliance') {
+                    recommendation = 'Establish regular audit processes and maintain compliance documentation.';
+                } else if (q.category === 'Incident Management') {
+                    recommendation = 'Create and test incident response procedures regularly.';
+                } else {
+                    recommendation = 'Review and improve security practices in this area.';
+                }
+
+                recommendations.push({
+                    question: q.question,
+                    category: q.category,
+                    severity: q.weight,
+                    recommendation
+                });
+            });
+
+            return recommendations;
+        }
+
+        function loadAssessmentsList() {
+            const container = document.getElementById('assessmentsList');
+            const userAssessments = assessments.filter(a => a.userId === currentUser.id);
+            
+            if (userAssessments.length === 0) {
+                container.innerHTML = '<p class="text-gray-500">No completed assessments yet</p>';
+                return;
+            }
+
+            container.innerHTML = userAssessments.map(assessment => `
+                <div class="border rounded-lg p-6 hover:bg-gray-50">
+                    <div class="flex justify-between items-start mb-4">
+                        <div>
+                            <h4 class="text-xl font-bold">${assessment.thirdPartyName}</h4>
+                            <p class="text-gray-600">${assessment.questionnaireName}</p>
+                            <p class="text-sm text-gray-500">Completed: ${assessment.completedDate}</p>
+                        </div>
+                        <div class="text-center">
+                            <div class="risk-${assessment.riskRating.toLowerCase()} px-4 py-2 rounded-lg text-lg font-bold mb-2">
+                                ${assessment.riskRating}
+                            </div>
+                            <div class="text-2xl font-bold text-gray-700">${assessment.riskScore}%</div>
+                        </div>
+                    </div>
+                    <div class="mt-4">
+                        <button onclick="viewAssessmentDetails(${assessment.id})" class="px-4 py-2 bg-purple-600 text-white rounded hover:bg-purple-700 mr-2">
+                            View Details
+                        </button>
+                        <button onclick="downloadReport(${assessment.id})" class="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700">
+                            <i class="fas fa-download mr-2"></i>Download Report
+                        </button>
+                    </div>
+                </div>
+            `).reverse().join('');
+        }
+
+        function viewAssessmentDetails(assessmentId) {
+            const assessment = assessments.find(a => a.id === assessmentId);
+            if (!assessment) return;
+
+            const modal = document.getElementById('successModal');
+            const content = modal.querySelector('.bg-white');
+            content.className = 'bg-white p-8 rounded-xl max-w-4xl mx-4 card-shadow max-h-screen overflow-y-auto';
+            
+            document.getElementById('successMessage').innerHTML = `
+                <div class="text-left">
+                    <h3 class="text-2xl font-bold mb-4">${assessment.thirdPartyName} - Assessment Details</h3>
+                    <div class="mb-4">
+                        <div class="flex justify-between items-center mb-2">
+                            <span class="font-semibold">Risk Rating:</span>
+                            <span class="risk-${assessment.riskRating.toLowerCase()} px-3 py-1 rounded">${assessment.riskRating}</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="font-semibold">Risk Score:</span>
+                            <span class="text-xl font-bold">${assessment.riskScore}%</span>
+                        </div>
+                    </div>
+                    <div class="space-y-3 max-h-96 overflow-y-auto">
+                        ${assessment.answers.map((a, i) => `
+                            <div class="border-l-4 ${a.answer === 'yes' ? 'border-green-500' : a.answer === 'partial' ? 'border-yellow-500' : a.answer === 'no' ? 'border-red-500' : 'border-gray-500'} p-3 bg-gray-50">
+                                <p class="font-semibold">${i + 1}. ${a.question}</p>
+                                <p class="text-sm text-gray-600 mt-1">Answer: <strong>${a.answer.toUpperCase()}</strong></p>
+                                ${a.comment ? `<p class="text-sm text-gray-600 mt-1">Comment: ${a.comment}</p>` : ''}
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+            modal.classList.remove('hidden');
+        }
+
+        function loadReportsList() {
+            const container = document.getElementById('reportsList');
+            const userAssessments = assessments.filter(a => a.userId === currentUser.id && a.report);
+            
+            if (userAssessments.length === 0) {
+                container.innerHTML = '<p class="text-gray-500">No reports generated yet</p>';
+                return;
+            }
+
+            container.innerHTML = userAssessments.map(assessment => `
+                <div class="border rounded-lg p-6 hover:bg-gray-50">
+                    <div class="flex justify-between items-start">
+                        <div class="flex-1">
+                            <h4 class="text-xl font-bold mb-2">${assessment.thirdPartyName} Risk Assessment Report</h4>
+                            <p class="text-gray-600 mb-2">${assessment.questionnaireName}</p>
+                            <div class="flex space-x-4 text-sm text-gray-600">
+                                <span><i class="fas fa-calendar mr-1"></i>${assessment.report.generatedDate}</span>
+                                <span><i class="fas fa-exclamation-triangle mr-1"></i>Risk: ${assessment.riskRating} (${assessment.riskScore}%)</span>
+                                <span><i class="fas fa-list mr-1"></i>${assessment.report.recommendations.length} Recommendations</span>
+                            </div>
+                        </div>
+                        <button onclick="downloadReport(${assessment.id})" class="px-4 py-2 bg-purple-600 text-white rounded hover:bg-purple-700">
+                            <i class="fas fa-download mr-2"></i>Download
+                        </button>
+                    </div>
+                </div>
+            `).reverse().join('');
+        }
+
+        function downloadReport(assessmentId) {
+            const assessment = assessments.find(a => a.id === assessmentId);
+            if (!assessment || !assessment.report) return;
+
+            const report = assessment.report;
+            const reportHTML = `
+                <!DOCTYPE html>
+                <html>
+                <head>
+                    <title>Risk Assessment Report - ${assessment.thirdPartyName}</title>
+                    <style>
+                        body { font-family: Arial, sans-serif; margin: 40px; line-height: 1.6; }
+                        .header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 30px; text-align: center; margin-bottom: 30px; }
+                        .risk-badge { display: inline-block; padding: 10px 20px; border-radius: 5px; font-weight: bold; }
+                        .risk-low { background-color: #10b981; color: white; }
+                        .risk-medium { background-color: #f59e0b; color: white; }
+                        .risk-high { background-color: #ef4444; color: white; }
+                        .risk-critical { background-color: #7f1d1d; color: white; }
+                        .section { margin-bottom: 30px; }
+                        .question { border-left: 4px solid #667eea; padding: 10px; margin-bottom: 15px; background: #f9fafb; }
+                        .recommendation { border-left: 4px solid #ef4444; padding: 10px; margin-bottom: 15px; background: #fef2f2; }
+                        table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+                        th, td { border: 1px solid #ddd; padding: 12px; text-align: left; }
+                        th { background-color: #667eea; color: white; }
+                    </style>
+                </head>
+                <body>
+                    <div class="header">
+                        <h1>Third-Party Risk Assessment Report</h1>
+                        <h2>${assessment.thirdPartyName}</h2>
+                        <p>Generated by RiskAuto - ${report.generatedDate}</p>
+                    </div>
+
+                    <div class="section">
+                        <h2>Executive Summary</h2>
+                        <p><strong>Assessment Name:</strong> ${assessment.questionnaireName}</p>
+                        <p><strong>Third Party:</strong> ${assessment.thirdPartyName}</p>
+                        <p><strong>Completion Date:</strong> ${assessment.completedDate}</p>
+                        <p><strong>Risk Rating:</strong> <span class="risk-badge risk-${assessment.riskRating.toLowerCase()}">${assessment.riskRating}</span></p>
+                        <p><strong>Risk Score:</strong> ${assessment.riskScore}%</p>
+                    </div>
+
+                    <div class="section">
+                        <h2>Assessment Findings</h2>
+                        <table>
+                            <tr>
+                                <th>Question</th>
+                                <th>Category</th>
+                                <th>Answer</th>
+                                <th>Severity</th>
+                            </tr>
+                            ${assessment.answers.map(a => `
+                                <tr>
+                                    <td>${a.question}</td>
+                                    <td>${a.category}</td>
+                                    <td>${a.answer.toUpperCase()}</td>
+                                    <td>${a.weight.toUpperCase()}</td>
+                                </tr>
+                            `).join('')}
+                        </table>
+                    </div>
+
+                    <div class="section">
+                        <h2>Recommendations</h2>
+                        ${report.recommendations.length > 0 ? report.recommendations.map((rec, i) => `
+                            <div class="recommendation">
+                                <h4>${i + 1}. ${rec.category} - ${rec.severity.toUpperCase()} Priority</h4>
+                                <p><strong>Question:</strong> ${rec.question}</p>
+                                <p><strong>Recommendation:</strong> ${rec.recommendation}</p>
+                            </div>
+                        `).join('') : '<p>No critical recommendations. The third party demonstrates good security practices.</p>'}
+                    </div>
+
+                    <div class="section">
+                        <h2>Conclusion</h2>
+                        <p>
+                            Based on the assessment conducted, ${assessment.thirdPartyName} has been rated as 
+                            <strong>${assessment.riskRating} risk</strong> with a risk score of ${assessment.riskScore}%.
+                            ${assessment.riskScore > 50 ? 
+                                'It is recommended to work with this vendor to address the identified security gaps before proceeding with critical business operations.' : 
+                                'The vendor demonstrates acceptable security practices. Continue to monitor and reassess periodically.'}
+                        </p>
+                    </div>
+
+                    <div style="margin-top: 50px; padding-top: 20px; border-top: 2px solid #ddd; text-align: center; color: #666;">
+                        <p>This report was automatically generated by RiskAuto - Third-Party Risk Assessment Platform</p>
+                        <p>© ${new Date().getFullYear()} RiskAuto. All rights reserved.</p>
+                    </div>
+                </body>
+                </html>
+            `;
+
+            const blob = new Blob([reportHTML], { type: 'text/html' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `RiskAssessment_${assessment.thirdPartyName.replace(/\s+/g, '_')}_${Date.now()}.html`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+
+            showSuccessModal('Report downloaded successfully!');
+        }
+
+        // Modal Functions
+        function showSuccessModal(message) {
+            document.getElementById('successMessage').innerHTML = message;
+            document.getElementById('successModal').classList.remove('hidden');
+        }
+
+        function closeModal() {
+            document.getElementById('successModal').classList.add('hidden');
+            const content = document.getElementById('successModal').querySelector('.bg-white');
+            content.className = 'bg-white p-8 rounded-xl max-w-md mx-4 card-shadow';
+        }
+    </script>
+</body>
+</html>
