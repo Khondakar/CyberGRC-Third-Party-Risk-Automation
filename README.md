@@ -6,10 +6,11 @@ This is a learning-focused weekend project, so you may find mistakes in the desi
 
 **If you notice something that could be better, I’d genuinely appreciate your help:**
 
-_Open an issue to share suggestions or ask questions.
+Open an issue to share suggestions or ask questions.
 
 Submit a pull request with improvements.
 
 Share best practices, alternative designs, or helpful resources.
-_
+
+
 **I’m always keen to learn from others, so if you’re interested in collaborating or giving feedback, you’re very welcome here.**
