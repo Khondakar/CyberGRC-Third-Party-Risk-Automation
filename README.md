@@ -4,9 +4,9 @@ A web-based SaaS solution for Third-Party Risk Assessment with Cloud security ca
 **Note for Visitors & Contributors:**
 This is a learning-focused weekend project to help you find mistakes in the design, code, or overall approach. That’s intentional to some extent — I’m using this space to experiment, try new ideas, and improve over time.
 
-**If you notice something that could be better, I’d genuinely appreciate your help:**
+**This project is a work in progress. If you notice something that could be better, I’d genuinely appreciate your help:**
 
-Please feel free to open an issue to share suggestions or ask questions.
+Please don't hesitate to open an issue to share suggestions or ask questions.
 
 Submit a pull request with improvements.
 
