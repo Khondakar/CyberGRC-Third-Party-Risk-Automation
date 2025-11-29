@@ -1,4 +1,4 @@
-# CyberGRC Third-Party Risk Automation
+# RiskAuto (Third-Party Risk Assessment Automation)
 A web-based SaaS solution for Third-Party Risk Assessment with Cloud security capability.
 
 **Note for Visitors & Contributors:**
